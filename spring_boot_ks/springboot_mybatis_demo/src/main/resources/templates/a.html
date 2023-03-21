@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--    隔行变色-->
+    <!--    <style>-->
+    <!--        table tr:nth-child(odd)-->
+    <!--        {-->
+    <!--            background: blue;-->
+    <!--        }-->
+    <!--        /*设置偶数行颜色*/-->
+    <!--        table tr:nth-child(even)-->
+    <!--        {-->
+    <!--            background: beige;-->
+    <!--        }-->
+    <!--    </style>-->
+
+    <script type="text/javascript" th:src="@{/jquery-3.3.1.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+    <script th:src="@{/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.js}"></script>
+</head>
+
+<script type="text/javascript">
+    var type = null;
+    $(function () {
+        //点击修改按钮实现查看功能
+        $("#data_table tr:gt(0)").click(function (data) {
+            if (data.target.id == "update-mo") {
+                var id = $(this).find("input").eq(0).val();
+                $.ajax({
+                    url: '/user/updatequery',
+                    type: 'post',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data + "数据访问成功")
+                        //拿到参数把参数给到窗口中
+                        $("#userupdate-id").val(data.id);
+                        $("#userupdate-name").val(data.userName);
+                        $("#userupdate-email").val(data.email);
+                        $("#userupdate-type").val(data.role.roleName);
+                        $("#userupdate-userType").val(data.userType);
+                        type = data.userType;
+                        $('#identifier').modal('show')
+                    }
+                })
+            }
+        })
+
+        //提交数据实现修改
+        $("#button-upda").click(
+            function () {
+                console.log("进来了提交数据")
+                //收集参数
+                var id = $("#userupdate-id").val();
+                var userName = $("#userupdate-name").val();
+                var email = $("#userupdate-email").val();
+                var userType = $("#userupdate-userType").val();
+                //发送请求实现修改
+                $.ajax({
+                    url: '/user/update',
+                    data: {
+                        id: id
+                        , userName: userName
+                        , email: email
+                        , userType: userType
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data == "200") {
+                            //成功刷新页面
+                            window.location = "/user/a"
+                        } else {
+                            //失败模态窗口不关闭
+                            //
+                            $('#identifier').modal('show')
+                        }
+                    },
+                    error: {
+                        //出错
+                    }
+                })
+            }
+        );
+        //实现新增功能
+        $("#button-new").click(function () {
+            //收集参数
+            var userName = $("#usernew-name").val();
+            var email = $("#usernew-email").val();
+            var newType = $("#newType").val();
+
+            //表单验证....先不写了
+
+            $.ajax({
+                url: '/user/newuser',
+                data: {
+                    userName: userName
+                    , email: email
+                    , userType: newType
+                },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (data == "200") {
+                        //新增成功刷新页面
+                        window.location = "/user/a"
+                    } else {
+                        //失败模态窗口不关闭
+                        //这个其实可以不写
+                        $('#identifier').modal('show')
+                    }
+                },
+            })
+        })
+
+
+    })
+
+
+</script>
+
+<body>
+
+<!--    使用table表格展示用户信息-->
+欢迎:<span th:text=" ${session.userid}"></span>
+<table class="layui-table" lay-even lay-skin="row" id="data_table">
+    <caption>用户展示</caption>
+    <tr>
+        <th>用户名</th>
+        <th>邮箱</th>
+        <th>用户类型</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="userlist : ${users.list}">
+        <input th:id="user-id" th:type="hidden" th:value="${userlist.id} "></input>
+        <td th:text="${userlist.userName}"></td>
+        <td th:text="${userlist.email}"></td>
+        <td th:text="${userlist.role.roleName}"></td>
+        <td>
+            <a th:href="@{'/user/userview'(id=${userlist.id})}">查看</a>
+            <!--            <a href="javascript:;" th:id="${userlist.id}">修改</a> -->
+            <a href="javascript:;" id="update-mo">修改</a>
+            <a th:href="@{'/user/delete'(id=${userlist.id})}">删除</a>
+
+
+        </td>
+    </tr>
+</table>
+<br>
+<a th:href="@{'/user/remove'}">点击退出登录</a>
+<button class="layui-btn layui-btn-normal" data-toggle="modal" data-target="#newUser">
+    点击新增
+</button>
+<br>
+<p>当前<span th:text="${users.pageNum}">1</span>页,总<span th:text="${users.pages}">3</span>页,
+    共<span th:text="${users.total}">10</span>记录</p>
+<a th:href="@{/user/a(pageNum=1)}">首页</a>
+<a th:href="@{/user/a(pageNum=${users.prePage})}">上一页</a>
+<a th:href="@{/user/a(pageNum=${users.nextPage})}">下一页</a>
+<a th:href="@{/user/a(pageNum=${users.pages})}">最后一页</a>
+
+
+<!-- 修改模态窗口-->
+<div class="modal fade" id="identifier" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改窗口
+                </h4>
+            </div>
+            <div class="modal-body">
+                当前用户id为:<input type="text" id="userupdate-id" value="" readonly="readonly"><br>
+                用户名: <input type="text" id="userupdate-name" value=""><br>
+                用户邮箱:<input type="text" id="userupdate-email" value=""><br>
+
+                <input type="hidden" id="userupdate-userType" value=""><br>
+                用户类型: <input type="text" id="userupdate-type" value=""><br>
+                <!--                   <input type="hidden" id="userupdate-type" value=""><br>-->
+                <!--            用户类型:          <div class="layui-input-block">-->
+                <!--                    <div th:switch="0">-->
+                <!--                        <div th:case="">-->
+                <!--                            <input type="radio" name="type" value="0" title="用户管理员">-->
+                <!--                        </div>-->
+                <!--                        <div th:case="1">-->
+                <!--                            <input type="radio" name="type" value="1" title="普通用户" checked>-->
+                <!--                        </div>-->
+
+                <!--                    </div>-->
+                <!--                    <div th:switch="1">-->
+                <!--                        <div th:case="">-->
+                <!--                            <input type="radio" name="type" value="0" title="用户管理员">-->
+                <!--                        </div>-->
+                <!--                        <div th:case="1">-->
+                <!--                            <input type="radio" name="type" value="1" title="普通用户" checked>-->
+                <!--                        </div>-->
+
+                <!--                    </div>-->
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="button-upda">
+                    确认修改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增模态窗口-->
+<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="newUsertitle">
+                    新增窗口
+                </h4>
+            </div>
+            <div class="modal-body">
+                用户名: <input type="text" id="usernew-name" value=""><br>
+                用户邮箱:<input type="text" id="usernew-email" value=""><br>
+                用户类型:
+                <select>
+                    <option th:each="q : ${queryrole}"
+                            th:text="${q.roleName}" th:value="${q.id}" id="newType"></option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="button-new">
+                    确认新增
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

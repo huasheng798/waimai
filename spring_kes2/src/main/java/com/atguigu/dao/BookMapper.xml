@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.dao.BookMapper">
+    <select id="selectBook" resultType="book">
+        select *
+        from tbl_book
+    </select>
+
+    <insert id="insertByBook" parameterType="book">
+        insert into tbl_book (id, name, type, description)
+        values (default, #{type}, #{name}, #{description})
+    </insert>
+    <select id="selectBookById" resultType="book">
+        select *
+        from tbl_book
+        where id = #{id}
+    </select>
+
+    <update id="updateByBook" parameterType="book">
+        update tbl_book
+        SET type=#{type},
+            name=#{name},
+            description=#{description}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBookById">
+        DELETE
+        FROM tbl_book
+        WHERE id = #{id};
+    </delete>
+
+    <select id="selectByBook" resultType="book" parameterType="book">
+        select *
+        from tbl_book
+        <where>
+            <if test="name!='' and name!=null">
+                and name like '%' #{name} '%'
+            </if>
+            <if test="type !=null and type !=''">
+                and type like '%' #{type} '%'
+            </if>
+        </where>
+        limit #{pageNo},#{pageSize}
+    </select>
+
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_book
+        <where>
+            <if test="name!='' and name!=null">
+                and name like '%' #{name} '%'
+            </if>
+            <if test="type !=null and type !=''">
+                and type like '%' #{type} '%'
+            </if>
+        </where>
+        limit #{pageNo},#{pageSize}
+    </select>
+</mapper>

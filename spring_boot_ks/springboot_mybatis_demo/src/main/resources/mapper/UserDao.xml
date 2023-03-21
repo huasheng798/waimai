@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.mapper.UserDao">
+    <!--column是指查询出来的字段名
+    property对应实体类的属性
+    -->
+
+
+    <resultMap id="BaseResultMap" type="com.mybatis.bean.User">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="userType" property="userType"/>
+        <association property="role" javaType="com.mybatis.bean.Role">
+            <result column="id" property="id"/>
+            <result column="roleName" property="roleName" jdbcType="CHAR"/>
+        </association>
+    </resultMap>
+
+    <!--ofType  代表 集合中的每一个对象都是user类型
+    -->
+    <resultMap id="r_u" type="com.mybatis.bean.Role">
+        <id column="id" property="id"/>
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+        <collection property="users" ofType="com.mybatis.bean.User">
+            <result column="id" property="id" jdbcType="VARCHAR"/>
+            <result column="userName" property="userName" jdbcType="VARCHAR"/>
+            <result column="password" property="password" jdbcType="VARCHAR"/>
+            <result column="email" property="email" jdbcType="VARCHAR"/>
+            <result column="userType" property="userType"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectListRole" resultMap="r_u">
+        select r.id, r.roleName, u.*
+        from smbms_role r
+                 left join
+             news_user u on r.id = u.userType
+    </select>
+
+
+    <select id="queryListUser" resultMap="BaseResultMap">
+        select u.*, r.id, r.roleName
+        from news_user u
+                 join
+             smbms_role r on u.userType = r.id
+    </select>
+
+    <insert id="addUser" parameterType="user">
+        insert into news_user (id, userName, password)
+        values (#{id}, #{userName}, #{password})
+    </insert>
+
+
+    <update id="updateUser">
+        update news_user
+        set userName=#{userName}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUser">
+        delete
+        from news_user
+        where id = #{id}
+    </delete>
+    <select id="queryUserById" resultMap="BaseResultMap">
+        select u.*, r.id, r.roleName
+        from news_user u
+                 join
+             smbms_role r on u.userType = r.id
+        where u.id = #{id}
+    </select>
+
+    <update id="updateUser1">
+        update news_user
+        set userName=#{userName},
+            email=#{email},
+            userType=#{userType}
+        where id = #{id}
+    </update>
+
+    <select id="queryrole" resultType="role">
+        select *
+        from smbms_role
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into news_user (id, userName, email, userType)
+        values (#{id}, #{userName}, #{email}, #{userType})
+    </insert>
+
+    <select id="loginUser" resultType="User">
+        select *  from  news_user where userName=#{userName} and password=#{password}
+    </select>
+</mapper>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org"></html>
+</head>
+<body>
+<!--引入js文件-->
+<script th:src="@{test.js}"></script>
+<!--th:text  用于文本替换-->
+<p th:text="hello">欢迎光临</p>
+
+<!--获取变量值 ${}-->
+<!--拿到基本数据类型的值-->
+<p th:text="${id}">这是一个p标签</p>
+<!--获取复杂数据类型的参数-->
+<p th:text="${user.email}">这是一个p标签</p>
+
+<p th:text="${session.uid}">这是一个p标签</p>
+<p>这是一个p标签</p>
+<!--URL表达式-->
+<a th:href="@{/a}">跳转</a>
+<a th:href="@{https://www.baidu.com/}">跳转</a>
+
+<!--文本替换-->
+<p th:text="|欢迎${user.userName}使用thymleaf|">欢迎使用thymleaf</p>
+<!--字符串拼接-->
+<p th:text="'欢迎'+${user.userName}+'使用thymleaf'">欢迎使用thymleaf</p>
+<!--运算-->
+<p th:text="${id}>1 ? '你好啊':'这是false'"></p>
+<!--if判断
+表达式为true展示p标签内容
+-->
+<p th:if="${user.email=='请求权'}">
+    这里是p标签中的内容
+</p>
+<p th:if="${user.email=='错误'}">
+    这里是p标签中的内容（我不会展示）
+</p>
+<!--这个unless其实就是 和if相反-->
+<p th:unless="${user.email=='请求权'}">
+    表达式为false的时候展示我(我不会展示)
+</p>
+<p th:unless="${user.email=='xxx'}">
+    这次我可以展示
+</p>
+
+<!--switch选择结构-->
+<div th:switch="zhang">
+    <div th:case="校长">
+        校长
+    </div>
+    <div th:case="张三">
+        颤三
+    </div>
+    <div th:case="zhang">
+        这次我会显示
+    </div>
+    <!--    默认用*-->
+    <div th:case="*">
+        登录人是*
+    </div>
+
+
+    <div th:each="a: ${list}">
+        <div th:text="${a}"></div>
+    </div>
+
+
+</div>
+</body>
+</html>

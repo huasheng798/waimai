@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    druid:
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://localhost:3306/newsdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+     username: root
+     password: root
+     initialSize: 5   #\u9ED8\u8BA4\u8FDE\u63A5\u6570
+     minIdle: 5       #\u6700\u5C0F\u8FDE\u63A5\u6570
+     maxActive: 20    #\u6700\u5927\u8FDE\u63A5\u6570
+     maxWait: 60000   #\u6700\u957F\u7B49\u5F85\u65F6\u95F4  \u6BEB\u79D2
+     timeBetweenEvictionRunsMillis: 60000
+     minEvictableIdleTimeMillis: 300000
+     validationQuery: SELECT 1 FROM DUAL
+     testWhileIdle: true
+     testOnBorrow: false
+     testOnReturn: false
+     poolPreparedStatements: true
+  thymeleaf:
+    mode: HTML  #使用的语言
+    encoding: UTF-8   #字符集
+    servlet:
+      content-type: text/html #内容
+    cache: false   #不开启缓存
+
+mybatis:
+  type-aliases-package: com.mybatis.bean
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+server:
+  port: 8081
+  #分页
+pagehelper:
+  helper-dialect: mysql #数据库,他会自动选择合适的分页方式
+  params: count  #参数
+  reasonable: true #分页合理化参数  当该参数为true时，如果上一页为0 就会检测 到你为0 这个时候它只会默认显示第一页
+  support-methods-arguments: true #直接传递分页参数

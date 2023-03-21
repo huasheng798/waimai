@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>首页</h1>
+<a th:href="@{/hello/testRequestMapping}">测试RequestMapping</a><br>
+<a th:href="@{/a5a/testAnt}">测试@RequestMapping可以匹配ant风格的路径---使用?</a><br>
+<a th:href="@{/testPath/1}">测试路径中的占位符---test</a><br>
+<a th:href="@{/testPath1/564/admin}">测试路径中的占位符=----test2</a>
+<a th:href="@{/test_param.html}">测试API页面</a>
+</body>
+</html>

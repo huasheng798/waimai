@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" th:src="@{/jquery-3.3.1.min.js}"></script>
+<link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+<script th:src="@{/bootstrap.min.js}"></script>
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+<script th:src="@{/layui/layui.js}"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+</head>
+<body>
+
+<form id="form-login" th:action="${'/user/login'}">
+    账户:
+    <input type="text" name="username" value="">
+    密码:
+    <input type="text" name="password" value="">
+    <input type="submit" value="点击登录" id="sub-log">
+</form>
+
+</body>
+</html>

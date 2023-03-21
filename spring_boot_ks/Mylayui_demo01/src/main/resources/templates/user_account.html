@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--   thymeleaf -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>数据展示</title>
+
+    <!--    <link rel="stylesheet" href="js/layui/css/layui.css">-->
+    <link rel="stylesheet" th:href="@{js/layui/css/layui.css}">
+    <!--    <script src="js/layui/layui.js"></script>-->
+
+    <!--    <script type="text/javascript" th:src="@{js/jquery-3.3.1.min.js}"></script>-->
+
+</head>
+<body>
+<!--<table id="demo" class="layui-table" lay-even lay-skin="nob"></table>-->
+<table class="layui-hide" id="userList" lay-filter="userList" lay-skin="nob"></table>
+<script type="text/html" id="barDemo">
+
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script th:src="@{/js/layui/layui.js}"></script>
+<script>
+    console.log("来到了数据展示")
+    // 加载table模块
+    layui.use("table", function () {
+        var table = layui.table;
+        //加载table实例
+        table.render({
+            elem: '#userList',//elem属性用来绑定容器的id属性值
+            url: "/bookList",//数据接口
+            skin: "nob",
+            page: {
+                layout: ['prev', 'page', 'next', 'count', 'limit', 'refresh', 'skip']//自定义布局顺序
+                , limit: 5	//初始  每页几条数据
+                , limits: [5, 10, 15]	//可以选择的 每页几条数据
+                , groups: 10 	//最多几个跳页按钮
+                , first: false //不显示首页
+                , last: false //不显示尾页
+            }
+            //  limit: 5, //每页显示的数量
+            //这块巨坑！！！！ 如果使用thymeleaf 他会把[[解析成其他的，所以必须分开写
+            , cols: [
+                [ //表头
+                    //其中第一个值id,username,和文件json中的数据对应
+                    {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+                    , {field: 'userName', title: '用户名', width: 80}
+                    , {field: 'gender', title: '性别', width: 80, sort: true}
+                    // , {field: 'birthday', title: '年龄', width: 177}
+                    , {field: 'phone', title: '手机号', width: 177}
+                    , {field: 'address', title: '住址', width: 177, sort: true}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                ]
+            ]
+        })
+        // 监听行工具事件
+        table.on('tool(userList)', function (obj) {//其中tool是工机名字，(这里) 是对应 lay-filter="对应的值"
+            var data = obj.data;//获取当前行的数据
+            var id = data.id
+            //console.log(obj)
+            if (obj.event === 'del') {//删除
+                console.log("删除触发")
+                layer.confirm('真的删除行么', function (index) {
+                    //我感觉这一块我们就可以获取id发送异步请求进行删除
+                    $.ajax({
+                        url: '/user/delete',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            id: id
+                        },
+                        success: function (data) {
+                            //接收成功
+                            if (data == "true") {
+                                obj.del();//和tr命令差不多 移除行
+                                layer.close(index);//向服务器端发送删除命令
+                            } else {
+                                   //失败什么也不做
+                            }
+                        }
+                    })
+
+                });
+            } else if (obj.event === 'edit') {//修改命令
+                // layer.prompt({
+                //     formType: 2//表单类型，不是很理解找不到讲解
+                //     , value: data.email
+                // }, function (value, index) {
+                //     obj.update({
+                //         email: value
+                //     });
+                //     layer.close(index);
+                // });
+
+                layer.open({
+                    type: 2,//类型 //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                    //anim: 4,//动画效果
+                    area: ['520px', '500px'],//定义宽和高
+                    title: "修改窗口",//题目
+                    shadeClose: false, //点击遮罩不会关闭
+                    //   content: $('#popUpdateTest')//打开的内容
+                    // content:'/userUpdate?id='+id,
+                    //    content:'userUpdate.html'可以使用
+                    content: '/userUpdate?id=' + id,
+                    //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
+                });
+            }
+        });
+    })
+</script>
+
+</body>
+
+</html>

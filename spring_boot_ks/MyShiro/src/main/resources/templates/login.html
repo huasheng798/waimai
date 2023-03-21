@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.thymeleaf.org/thymeleaf-extras-shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+
+</head>
+<body>
+这里是登录页
+<div >
+
+</div>
+<p th:text="${msg}" style="color: red"></p>
+<form id="form-login" th:action="${'/dologin'}">
+    账户:
+    <input type="text" name="username" value="">
+    密码:
+    <input type="text" name="password" value="">
+    <input type="submit" value="点击登录" id="sub-log">
+</form>
+
+</body>
+</html>

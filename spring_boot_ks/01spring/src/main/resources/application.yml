@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+students:
+  name: xiaoming
+  age: 18
+  sex: man
+  books:
+    - 海底两万里
+    - 红楼梦
+    - 三体
+  map: {"[键值]": 121212,key2: 12132}
+  teacher:
+       tname: 李四
+       tage: 222
+
+
+useraaa:
+    name: 李四
+    age: 50
+    dog:
+      dname: 小黄
+      dage: 3
+    hobby: [读书,学习,看书]
+    mood: {"[周一]": 良好,"[周二]": 开朗,"[周三]": 快乐,xxx: xxx}
+    cat:
+      -  name: 小咪
+         age: 2
+      -  name: 小紫
+         age: 3
+
+
+
