@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>测试请求参数</title>
+</head>
+<body>
+<h1>测试请求参数</h1>
+<a th:href="@{/testServletAPI(name='张三',age=20)}">测试使用servletAPI获取请求参数</a>
+<a th:href="@{/testParam(username='admin',password=123456)}">测试使用控制器的形参获取请求参数</a>
+<form th:action="@{/testParam2}" method="get">
+    用户:<input type="text" name="username"><br>
+    密码:<input type="password" name="password"><br>
+    爱好:<input type="checkbox" name="hobby" value="a">a<br>
+    爱好:<input type="checkbox" name="hobby" value="b">b<br>
+    爱好:<input type="checkbox" name="hobby" value="c">c<br>
+    <input type="submit" name="测试是哦那个控制器的形参获取请求参数2">
+</form>
+<form th:action="@{/testParam3}" method="get">
+    用户:<input type="text" name="user_name"><br>
+    密码:<input type="password" name="password"><br>
+    爱好:<input type="checkbox" name="hobby" value="a">a<br>
+    爱好:<input type="checkbox" name="hobby" value="b">b<br>
+    爱好:<input type="checkbox" name="hobby" value="c">c<br>
+    <input type="submit" name="测试是哦那个控制器的形参获取请求参数3">
+</form>
+<br>
+<form th:action="@{/testpojo}" method="post">
+    用户名：<input type="text" name="username"><br>
+    密码：<input type="password" name="password"><br>
+    性别：<input type="radio" name="sex" value="男">男
+    <input type="radio" name="sex" value="女">女<br>
+    年龄：<input type="text" name="age"><br>
+    邮箱：<input type="text" name="email"><br>
+    <input type="submit" value="使用实体类接收参数">
+</form>
+
+</body>
+</html>

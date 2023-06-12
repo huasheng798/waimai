@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: reggie_take_out
+    #上面这个name就是指定一下项目的名称，不是必须配置,不配置就是项目的工程名
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: root
+  redis:
+    database: 0
+    host: 192.168.111.100
+    password: 123321
+    port: 6379
+  cache:
+    redis:
+      time-to-live: 1800000  #设置缓存数据的过期时间,然后去启动类加上开启注解缓存
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+#自定义一个变量给图片下载使用
+reggie:
+  path: D:\ideaimage\

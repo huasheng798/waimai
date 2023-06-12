@@ -1,0 +1,5 @@
+com\atguigu\service\BookService.class
+com\atguigu\dao\BookDao.class
+com\atguigu\service\BookServiceImpl.class
+com\atguigu\controller\BookController.class
+com\atguigu\bean\Book.class

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.atguigu.mvc"/>
+
+    <!--    开启注解-->
+    <mvc:annotation-driven/>
+    <!--开启静态管理-->
+    <mvc:default-servlet-handler/>
+
+
+    <!--视图解析器 前缀后缀-->
+    <!--    <com.atguigu.bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"></com.atguigu.bean>-->
+    <!--配置前缀后缀 视图解析器-->
+    <com.atguigu.bean id="viewResolver"
+          class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="order" value="1"/>
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="templateEngine">
+            <com.atguigu.bean class="org.thymeleaf.spring5.SpringTemplateEngine">
+                <property name="templateResolver">
+                    <com.atguigu.bean
+                            class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+                        <!-- 视图前缀 -->
+                        <property name="prefix" value="/WEB-INF/templates/"/>
+                        <!-- 视图后缀 -->
+                        <property name="suffix" value=".html"/>
+                        <property name="templateMode" value="HTML5"/>
+                        <property name="characterEncoding" value="UTF-8"/>
+                    </com.atguigu.bean>
+                </property>
+            </com.atguigu.bean>
+        </property>
+    </com.atguigu.bean>
+
+    <mvc:view-controller path="/" view-name="index"/>
+
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <!--     com.atguigu.bean:就是一个组件 一个对象
+             <com.atguigu.bean class="com.atguigu.mvc.interceptors.FirstInterceptor"/>
+         bean这就标识现在所有的请求全部拦截
+        -->
+        <!--我们在拦截器类里添加个@Component 再扫描一下组件注解 它的效果和
+        上面bean那个一样 都是对所有的请求进行拦截-->
+<!--        <ref com.atguigu.bean="firstInterceptor"></ref>-->
+    <mvc:interceptor>
+        <!--就是要拦截所有 -->
+        <mvc:mapping path="/**"/>
+        <!--排除拦截谁-->
+       <mvc:exclude-mapping path="/"/>
+    <!--选择拦截器-->
+        <ref com.atguigu.bean="firstInterceptor"></ref>
+    </mvc:interceptor>
+
+    </mvc:interceptors>
+</beans>

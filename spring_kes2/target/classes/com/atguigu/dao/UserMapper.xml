@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.dao.UserMapper">
+    <!--    账户注册sql-->
+    <insert id="insertUser" parameterType="user">
+        insert into news_user (id, userName, password, email, userType)
+        values (#{id}, #{userName}, #{password}, #{email}, '1')
+    </insert>
+    <!--    账户登录sql-->
+    <select id="select" resultType="user">
+        select *
+        from news_user
+        where userName = #{userName}
+          and password = #{password}
+    </select>
+<!--    账户登录2 (第一个实体类没有查询到的时候什么也不返回 null也没有)-->
+    <select id="selectByNameOnPassword" resultType="int">
+        select count(*)
+        from news_user
+        where userName = #{userName}
+          and password = #{password}
+    </select>
+</mapper>
+

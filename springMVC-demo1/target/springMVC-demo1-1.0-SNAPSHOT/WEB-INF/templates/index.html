@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>首页</h1>
+<!--因为我们的上下文路径 这里 我们是springMVC 他可能会更换
+我们不能每次换一次路径都要来换一次这个(/springMVC/target)
+所以这里我们使用thymeleaf来解析我们的上下文路径 只需要加上th:   @{}
+他就会自动添加我们上下文路径
+-->
+<a th:href="@{/target}">访问目标页面target.html</a>
+</body>
+</html>
