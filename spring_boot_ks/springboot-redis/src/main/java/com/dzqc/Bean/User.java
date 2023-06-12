@@ -1,7 +1,11 @@
 package com.dzqc.Bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import sun.dc.pr.PRError;
+
+import java.io.Serializable;
 
 /**
  * @Author:luosheng
@@ -9,8 +13,11 @@ import sun.dc.pr.PRError;
  * @Description:
  */
 @Data
-public class User {
-private String age;
-private String name;
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements Serializable {
+    private String id;
+    private String age;
+    private String name;
 
 }

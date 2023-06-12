@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+    <!-- LayUI的核心CSS文件 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/js/layui/css/layui.css}">
+    <!-- 引入LayUI的核心JS文件 -->
+    <script th:src="@{/js/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+</head>
+<body>
+
+<form class="layui-form" id="add-from" style="display:none"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <label class="layui-form-label">用户姓名</label>
+    <div class="layui-input-block">
+        <input type="text" name="title" lay-verify="title" autocomplete="off"
+               placeholder="请输入标题" class="layui-input" style="height: 60%">
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">请务必填写用户名</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">下拉选择框</label>
+        <div class="layui-input-block">
+            <select name="interest" lay-filter="aihao">
+                <option value="0">写作</option>
+                <option value="1">阅读</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">复选框</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like[write]" title="写作">
+            <input type="checkbox" name="like[read]" title="阅读">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单选框</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" value="0" title="男">
+            <input type="radio" name="sex" value="1" title="女" checked>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+
+<table id="demo" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add" id="add">新增</button>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#demo'
+            //, height: 312
+            , url: '/user/list' //数据接口
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , skin: 'nob'
+            , page: {
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 5 //只显示 1 个连续页码
+                //   , first: false //不显示首页
+                // , last: false //不显示尾页
+                , limit: 3
+                , limits: [3, 5, 10]
+                , toolbar: '#toolbarDemo'
+            }
+            , cols: [
+                [ //表头
+                    {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+                    , {field: 'userCode', title: '用户编码', width: 80}
+                    , {field: 'userName', title: '用户名', width: 80}
+                    , {field: 'gender', title: '性别', width: 50}
+                    , {field: 'birthday', title: '生日', width: 80}
+                    , {field: 'phone', title: '手机号', width: 120}
+                    , {field: 'address', title: '地址', width: 120}
+                    , {field: 'userRole', title: '用户角色', width: 50, sort: true}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 200}
+                ]
+            ],
+        });
+        table.on('toolbar(test)', function (obj) {
+            if (obj.event == "add") {
+                //  $("[name='testname']").val("xxxxxxxxxxxxxxx");//向模态框中赋值
+                layer.open({
+                    type: 1  //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                    , content: $('#add-from') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    , area: ['520px', '500px']//定义宽和高
+                    , title: "新增窗口"//题目
+                    , shadeClose: true
+                })
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.prompt({
+                    formType: 2
+                    , value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'detail') {
+                layer.msg('查看操作');
+            }
+        });
+
+
+    });
+
+</script>
+</body>
+</html>

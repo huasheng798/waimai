@@ -13,7 +13,7 @@ public class TestMD5 {
         //加密三次加密加盐
         //  Md5Hash salt = new Md5Hash(passwordOne, "salt", 3);
         // Md5Hash salt = new Md5Hash(passwordOne+"salt");
-           Md5Hash salt = new Md5Hash(passwordOne,"111111",3);
+           Md5Hash salt = new Md5Hash("123456","admin",3);
         System.out.println(salt);
 
     }

@@ -1,31 +1,38 @@
 package com.dzqc.config;
 
+import com.dzqc.Bean.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @Author:luosheng
  * @Date:2023/3/20 11:08
  * @Description:
  */
-//@Configuration
+@Component
 public class RedisConfig {
 
-  //  @Bean
-    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
-        RedisTemplate<String,Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
-        //配置序列化凡是：key序列化为：String  value序列化为JSON（默认使用Jackson）
-        template.setKeySerializer(RedisSerializer.string());
-        template.setValueSerializer(RedisSerializer.json());
-        template.setHashKeySerializer(RedisSerializer.string());
-        template.setHashValueSerializer(RedisSerializer.json());
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-        return template;
+    public boolean add(String key, User user) {
+        try {
+            redisTemplate.opsForValue().set(key, user);
+        } catch (Exception e) {
+            throw new RuntimeException("查询失败");
+        }
+        return true;
+    }
 
+    public User getById(String key) {
+        User user = (User) redisTemplate.opsForValue().get(key);
+        return user;
     }
 }
 
